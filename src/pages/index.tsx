@@ -10,7 +10,9 @@ export default function Home() {
       </Head>
 
       <main className="flex min-h-screen items-center justify-center">
-        Hola mundo
+        <div className="rounded-lg border border-primary p-2 dark:border-primary-dark">
+          Hola mundo
+        </div>
       </main>
     </>
   )

@@ -3,7 +3,7 @@ import { ThemeToggler } from './ThemeToggler'
 export default function Sidebar() {
   return (
     <aside className="h-screen w-48 flex-grow-0 -translate-x-full transition-transform sm:translate-x-0">
-      <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 dark:bg-gray-800">
+      <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 transition-colors delay-100 ease-linear dark:bg-gray-800">
         <ul className="space-y-2 font-medium">
           <li>
             <a

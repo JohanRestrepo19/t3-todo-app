@@ -7,11 +7,9 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <main className="bg-base transition-colors delay-100 ease-linear dark:bg-base-dark dark:text-slate-400">
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-grow">{children}</div>
-      </div>
+    <main className="flex max-h-screen bg-base transition-colors delay-100 ease-linear dark:bg-base-dark dark:text-slate-400">
+      <Sidebar />
+      <div className="grow">{children}</div>
     </main>
   )
 }

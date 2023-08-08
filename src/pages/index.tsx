@@ -1,6 +1,13 @@
+import { type FormEvent } from 'react'
 import Head from 'next/head'
+import Input from '@/components/Input'
 
 export default function Home() {
+  const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log(event)
+  }
+
   return (
     <>
       <Head>
@@ -10,64 +17,36 @@ export default function Home() {
       </Head>
 
       <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
-        <div className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
-          Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit
-          enim labore culpa sint ad nisi Lorem pariatur mollit ex esse
-          exercitation amet. Nisi anim cupidatat excepteur officia.
-          Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate
-          voluptate dolor minim nulla est proident. Nostrud officia pariatur ut
-          officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit
-          commodo officia dolor Lorem duis laboris cupidatat officia voluptate.
-          Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis
-          officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis
-          sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea
-          consectetur et est culpa et culpa duis.
-        </div>
+        {/* Form */}
+        <form
+          className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
+          onSubmit={handleSubmitForm}
+        >
+          <h3 className="mb-2 text-xl font-medium">New Todo</h3>
+          <Input label="Title" />
+          <Input label="Description" />
 
-        <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
-          Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit
-          enim labore culpa sint ad nisi Lorem pariatur mollit ex esse
-          exercitation amet. Nisi anim cupidatat excepteur officia.
-          Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate
-          voluptate dolor minim nulla est proident. Nostrud officia pariatur ut
-          officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit
-          commodo officia dolor Lorem duis laboris cupidatat officia voluptate.
-          Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis
-          officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis
-          sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea
-          consectetur et est culpa et culpa duis. Lorem ipsum dolor sit amet,
-          officia excepteur ex fugiat reprehenderit enim labore culpa sint ad
-          nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim
-          cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem
-          est aliquip amet voluptate voluptate dolor minim nulla est proident.
-          Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt
-          ex occaecat reprehenderit commodo officia dolor Lorem duis laboris
-          cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi
-          laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit
-          commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint
-          cupidatat ullamco ut ea consectetur et est culpa et culpa duis. Lorem
-          ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-          labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation
-          amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud
-          nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim
-          nulla est proident. Nostrud officia pariatur ut officia. Sit irure
-          elit esse ea nulla sunt ex occaecat reprehenderit commodo officia
-          dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident
-          adipisicing id nulla nisi laboris ex in Lorem sunt duis officia
-          eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit
-          enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et
-          est culpa et culpa duis. Lorem ipsum dolor sit amet, officia excepteur
-          ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur
-          mollit ex esse exercitation amet. Nisi anim cupidatat excepteur
-          officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet
-          voluptate voluptate dolor minim nulla est proident. Nostrud officia
-          pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat
-          reprehenderit commodo officia dolor Lorem duis laboris cupidatat
-          officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex
-          in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex
-          non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat
-          ullamco ut ea consectetur et est culpa et culpa duis.
-        </div>
+          {/*TODO: Must be a select */}
+          <Input label="Priority" />
+
+          {/* TODO: Must be a date  */}
+          <Input label="Target date" />
+
+          {/*TODO: Must be a multiselect  */}
+          <Input label="Categories" />
+
+          {/* TODO: Must accept multiple inputs  */}
+          <Input label="Assigned to" />
+          <button
+            type="submit"
+            className="text center dark.hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"
+          >
+            Submit
+          </button>
+        </form>
+
+        {/* Todo list */}
+        <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"></div>
       </main>
     </>
   )

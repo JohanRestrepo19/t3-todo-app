@@ -1,12 +1,20 @@
-import { type FormEvent } from 'react'
 import Head from 'next/head'
 import Input from '@/components/Input'
+import { useForm, type SubmitHandler } from 'react-hook-form'
+
+type Inputs = {
+  title: string
+  desc: string
+}
 
 export default function Home() {
-  const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log(event)
+  const { register, handleSubmit, watch } = useForm<Inputs>()
+
+  const handleSubmitForm: SubmitHandler<Inputs> = data => {
+    console.log('hola', data)
   }
+
+  console.log(watch('title'))
 
   return (
     <>
@@ -17,14 +25,14 @@ export default function Home() {
       </Head>
 
       <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
-        {/* Form */}
+        {/* Form */}:{' '}
         <form
           className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
-          onSubmit={handleSubmitForm}
+          onSubmit={handleSubmit(handleSubmitForm)}
         >
           <h3 className="mb-2 text-xl font-medium">New Todo</h3>
-          <Input label="Title" />
-          <Input label="Description" />
+          <Input label="Title" {...register('title')} />
+          <Input label="Description" {...register('desc')} />
 
           {/*TODO: Must be a select */}
           <Input label="Priority" />
@@ -44,7 +52,6 @@ export default function Home() {
             Submit
           </button>
         </form>
-
         {/* Todo list */}
         <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"></div>
       </main>

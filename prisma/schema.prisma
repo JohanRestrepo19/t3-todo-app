@@ -80,16 +80,16 @@ enum Status {
 }
 
 model Todo {
-  id         String     @id @default(cuid())
-  title      String
-  desc       String?
-  priority   Priority   @default(LOW)
-  targetDate DateTime?
-  status     Status     @default(PENDING)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime?
-  categories Category[]
-  users      User[]
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  priority    Priority   @default(LOW)
+  targetDate  DateTime?
+  status      Status     @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?
+  categories  Category[]
+  users       User[]
 }
 
 model Category {

@@ -1,15 +1,22 @@
 import Head from 'next/head'
-import Input from '@/components/Input'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+
+import Input from '@/components/Input'
 import { api, type RouterInputs } from '@/utils/api'
 
 type Inputs = RouterInputs['todos']['create']
 
 export default function Home() {
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
-  const { register, handleSubmit } = useForm<Inputs>()
+  const { data: priorities } = api.todos.getTodoPriorities.useQuery()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<Inputs>()
 
   const handleSubmitForm: SubmitHandler<Inputs> = data => {
+    console.log('data to be submitted: ', data)
     mutate(data)
   }
 
@@ -28,11 +35,27 @@ export default function Home() {
           onSubmit={handleSubmit(handleSubmitForm)}
         >
           <h3 className="mb-2 text-xl font-medium">New Todo</h3>
-          <Input label="Title" {...register('title')} />
-          <Input label="Description" {...register('description')} />
+          <Input
+            label="Title"
+            {...register('title')}
+            errorMsg={errors.title?.message}
+          />
+          <Input
+            label="Description"
+            {...register('description')}
+            errorMsg={errors.description?.message}
+          />
 
           {/*TODO: Must be a select */}
           <Input label="Priority" />
+          <select {...register('priority')}>
+            <option disabled>Choose a priority</option>
+            {priorities?.map(priority => (
+              <option key={priority} value={priority} className="capitalize">
+                {priority}
+              </option>
+            ))}
+          </select>
 
           {/* TODO: Must be a date  */}
           <Input label="Target date" />

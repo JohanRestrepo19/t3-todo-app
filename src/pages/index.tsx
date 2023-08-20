@@ -1,10 +1,40 @@
 import Head from 'next/head'
+import { type SelectHTMLAttributes, forwardRef } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import Input from '@/components/Input'
 import { api, type RouterInputs } from '@/utils/api'
 
 type Inputs = RouterInputs['todos']['create']
+
+interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
+  label: string
+  options?: string[]
+}
+
+const Select = forwardRef<HTMLSelectElement, Props>(function Select({
+  label,
+  options,
+  ...props
+}: Props) {
+  return (
+    <div className="group mb-6 w-full">
+      <label className="scale-75 text-sm text-gray-500 group-active:text-blue-600 dark:text-gray-400">
+        {label}
+      </label>
+      <select
+        {...props}
+        className="block w-full rounded-md border border-gray-300 bg-transparent py-2 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-transparent dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+      >
+        {options?.map(opt => (
+          <option key={opt} value={opt} className="capitalize dark:bg-gray-600">
+            {opt}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+})
 
 export default function Home() {
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
@@ -46,25 +76,17 @@ export default function Home() {
             errorMsg={errors.description?.message}
           />
 
-          {/*TODO: Must be a select */}
-          <Input label="Priority" />
-          <select {...register('priority')}>
-            <option disabled>Choose a priority</option>
-            {priorities?.map(priority => (
-              <option key={priority} value={priority} className="capitalize">
-                {priority}
-              </option>
-            ))}
-          </select>
+          <Input label="Target date" type="date" />
 
-          {/* TODO: Must be a date  */}
-          <Input label="Target date" />
+          <Select
+            label="Priority"
+            options={priorities}
+            {...register('priority')}
+          />
 
           {/*TODO: Must be a multiselect  */}
-          <Input label="Categories" />
+          <Select label="Category" options={[]} />
 
-          {/* TODO: Must accept multiple inputs  */}
-          <Input label="Assigned to" />
           <button
             type="submit"
             className="text center dark.hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"

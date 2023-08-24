@@ -31,6 +31,7 @@ export const todosRouter = createTRPCRouter({
     const todo = await ctx.prisma.todo.findFirst({ where: { id: input } })
     return { todo }
   }),
+
   getTodoPriorities: publicProcedure.query(() => {
     return Object.values(Priority)
   })

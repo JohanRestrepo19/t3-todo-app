@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import {
   faHome,
@@ -22,15 +23,15 @@ export default function Sidebar() {
   return (
     <aside className="min-h-screen w-48 -translate-x-full transition-transform sm:translate-x-0">
       <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 transition-colors delay-100 ease-linear dark:bg-gray-800">
-        {/* TODO: Add app logo or user profile image */}
         <Link href="/" className="mb-5 flex items-center pl-2.5">
-          {/*eslint-disable-next-line*/}
-          <img
+          <Image
             src={
               data?.user.image || 'https://flowbite.com/docs/images/logo.svg'
             }
-            className="mr-3 h-6 sm:h-7"
+            className="mr-3 h-auto w-auto"
             alt="User's profile picture"
+            width={24}
+            height={24}
           />
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             Todo App

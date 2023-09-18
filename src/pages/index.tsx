@@ -1,24 +1,28 @@
+import { api, type RouterInputs } from '@/utils/api'
 import Head from 'next/head'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
-import { api, type RouterInputs } from '@/utils/api'
 
-type Inputs = RouterInputs['todos']['create']
+type TodoInputs = RouterInputs['todos']['create']
 
 export default function Home() {
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
+  const { data: categories } = api.categories.getAllByUserId.useQuery()
+
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<Inputs>()
+  } = useForm<TodoInputs>()
 
-  const handleSubmitForm: SubmitHandler<Inputs> = data => {
+  const handleSubmitForm: SubmitHandler<TodoInputs> = data => {
     console.log('data to be submitted: ', data)
     mutate(data)
   }
+
+  console.log('info from trpc queries: ', { priorities, categories })
 
   return (
     <>

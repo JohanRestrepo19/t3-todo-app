@@ -52,14 +52,17 @@ export default function Home() {
 
           <Input label="Target date" type="date" />
 
-          <Select
+          <Select<{ name: string; value: string }>
             label="Priority"
-            options={priorities}
-            {...register('priority')}
+            options={priorities?.map(prio => ({ name: prio, value: prio }))}
+            registerProps={register('priority')}
           />
 
-          {/*TODO: Must be a multiselect  */}
-          <Select label="Category" options={[]} />
+          <Select
+            label="Category"
+            options={[]}
+            registerProps={register('category')}
+          />
 
           <button
             type="submit"

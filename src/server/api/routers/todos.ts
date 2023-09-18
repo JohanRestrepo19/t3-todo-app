@@ -17,7 +17,7 @@ export const todosRouter = createTRPCRouter({
         priority: z.nativeEnum(Priority).optional(),
         targetDate: z.date().optional(),
         status: z.nativeEnum(Status).optional(),
-        categories: z.array(z.string()).optional(),
+        category: z.string().optional(),
         assignedTo: z.array(z.string()).optional()
       })
     )
@@ -38,9 +38,11 @@ export const todosRouter = createTRPCRouter({
   }),
 
   getTodoPriorities: protectedProcedure.query(async () => {
-    const priorities = Object.values(Priority)
+    const priorities = Object.values(Priority) as string[]
+
     //TODO: Remove nextline
-    await setTimeout(5000)
+    // await setTimeout(5000)
+
     console.log('Priorities: ', priorities)
     return priorities
   })

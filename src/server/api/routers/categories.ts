@@ -8,7 +8,8 @@ export const categoriesRouter = createTRPCRouter({
     })
 
     //TODO: Remove nextline
-    await setTimeout(3000)
+    // await setTimeout(3000)
+
     console.log('Categories: ', categories)
     return categories
   })

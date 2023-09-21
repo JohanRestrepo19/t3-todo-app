@@ -4,8 +4,7 @@ import {
   protectedProcedure,
   publicProcedure
 } from '@/server/api/trpc'
-import { Priority, Status } from '@prisma/client'
-import { setTimeout } from 'timers/promises'
+import { Priority } from '@prisma/client'
 
 //TODO: Make every procedure a protected one
 export const todosRouter = createTRPCRouter({
@@ -16,13 +15,12 @@ export const todosRouter = createTRPCRouter({
         description: z.string().optional(),
         priority: z.nativeEnum(Priority).optional(),
         targetDate: z.date().optional(),
-        status: z.nativeEnum(Status).optional(),
-        category: z.string().optional(),
+        // status: z.nativeEnum(Status).optional(),
+        categoryId: z.string().optional(),
         assignedTo: z.array(z.string()).optional()
       })
     )
-    .mutation(opts => {
-      const { input } = opts
+    .mutation(({ input }) => {
       console.log(input)
       return input
     }),
@@ -37,13 +35,7 @@ export const todosRouter = createTRPCRouter({
     return todo
   }),
 
-  getTodoPriorities: protectedProcedure.query(async () => {
-    const priorities = Object.values(Priority) as string[]
-
-    //TODO: Remove nextline
-    // await setTimeout(5000)
-
-    console.log('Priorities: ', priorities)
-    return priorities
+  getTodoPriorities: protectedProcedure.query(() => {
+    return Object.values(Priority) as string[]
   })
 })

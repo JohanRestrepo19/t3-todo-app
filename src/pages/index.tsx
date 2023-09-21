@@ -8,6 +8,7 @@ type TodoInputs = RouterInputs['todos']['create']
 
 export default function Home() {
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
+  //TODO: Investigate how get these data beforehand on server-side.
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
   const { data: categories } = api.categories.getAllByUserId.useQuery()
 
@@ -21,8 +22,6 @@ export default function Home() {
     console.log('data to be submitted: ', data)
     mutate(data)
   }
-
-  console.log('info from trpc queries: ', { priorities, categories })
 
   return (
     <>
@@ -52,16 +51,19 @@ export default function Home() {
 
           <Input label="Target date" type="date" />
 
-          <Select<{ name: string; value: string }>
+          <Select
             label="Priority"
-            options={priorities?.map(prio => ({ name: prio, value: prio }))}
+            options={priorities?.map(prio => ({
+              name: prio.toLowerCase(),
+              value: prio
+            }))}
             registerProps={register('priority')}
           />
 
           <Select
             label="Category"
-            options={[]}
-            registerProps={register('category')}
+            options={categories?.map(cat => ({ ...cat, value: cat.id }))}
+            registerProps={register('categoryId')}
           />
 
           <button

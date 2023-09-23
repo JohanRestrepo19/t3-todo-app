@@ -1,14 +1,32 @@
-import { api, type RouterInputs } from '@/utils/api'
 import Head from 'next/head'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { createServerSideHelpers } from '@trpc/react-query/server'
+import { type GetServerSideProps } from 'next'
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
+import { api, type RouterInputs } from '@/utils/api'
+import { appRouter } from '@/server/api/root'
+import { createTRPCContext } from '@/server/api/trpc'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
 
 type TodoInputs = RouterInputs['todos']['create']
 
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: await createTRPCContext({ req, res } as CreateNextContextOptions) //NOTE: possible error for type assertion.
+  })
+  await helpers.todos.getTodoPriorities.prefetch()
+  await helpers.categories.getAllByUserId.prefetch()
+  return {
+    props: {
+      trpcState: helpers.dehydrate()
+    }
+  }
+}
+
 export default function Home() {
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
-  //TODO: Investigate how get these data beforehand on server-side.
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
   const { data: categories } = api.categories.getAllByUserId.useQuery()
 

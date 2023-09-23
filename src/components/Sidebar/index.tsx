@@ -15,7 +15,6 @@ import { useToggleTheme } from '@/utils/hooks/useToggleTheme'
 export default function Sidebar() {
   const { data, ...session } = useSession()
   const { handleToggleTheme } = useToggleTheme()
-  console.log('Información de inicio de sesión: ', session)
 
   const handleLogin = async () => await signIn()
   const handleLogout = async () => await signOut()

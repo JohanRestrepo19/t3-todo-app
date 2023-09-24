@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import Head from 'next/head'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { type GetServerSideProps } from 'next'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
@@ -8,8 +10,21 @@ import { appRouter } from '@/server/api/root'
 import { createTRPCContext } from '@/server/api/trpc'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
+import { z } from 'zod'
+import { Priority } from '@prisma/client'
 
 type TodoInputs = RouterInputs['todos']['create']
+
+//NOTE: Best idea here is to put all my definiton schemas into other file and use them
+// in both server-side and client-side validations
+const todoSchema = z.object<TodoInputs>({
+  title: z.string().min(10),
+  description: z.string().optional(),
+  priority: z.nativeEnum(Priority).optional(),
+  targetDate: z.date().optional(),
+  categoryId: z.string().optional(),
+  assignedTo: z.array(z.string()).optional()
+})
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const helpers = createServerSideHelpers({
@@ -34,12 +49,18 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<TodoInputs>()
+  } = useForm<TodoInputs>({
+    resolver: zodResolver(todoSchema)
+  })
 
   const handleSubmitForm: SubmitHandler<TodoInputs> = data => {
     console.log('data to be submitted: ', data)
     mutate(data)
   }
+
+  useEffect(() => {
+    console.log('Hubo un cambio en los errores: ', errors)
+  }, [errors])
 
   return (
     <>

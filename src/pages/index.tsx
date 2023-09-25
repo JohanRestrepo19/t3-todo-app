@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import Head from 'next/head'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -36,17 +35,23 @@ export default function Home() {
     handleSubmit,
     formState: { errors }
   } = useForm<Todo>({
-    resolver: zodResolver(todoSchema)
+    defaultValues: {
+      categoryId: null,
+      priority: null,
+      targetDate: new Date()
+    },
+    resolver: async (data, context, options) => {
+      const result = await zodResolver(todoSchema)(data, context, options)
+      console.log('Form data: ', data)
+      console.log('Validation result: ', result)
+      return result
+    }
   })
 
   const handleSubmitForm: SubmitHandler<Todo> = data => {
     console.log('data to be submitted: ', data)
     mutate(data)
   }
-
-  useEffect(() => {
-    console.log('Hubo un cambio en los errores: ', { errors })
-  }, [errors])
 
   return (
     <>

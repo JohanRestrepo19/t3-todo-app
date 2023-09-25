@@ -25,6 +25,6 @@ export const todosRouter = createTRPCRouter({
   }),
 
   getTodoPriorities: protectedProcedure.query(() => {
-    return Object.values(Priority) as string[]
+    return Object.values(Priority)
   })
 })

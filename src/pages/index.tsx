@@ -5,26 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { type GetServerSideProps } from 'next'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
-import { api, type RouterInputs } from '@/utils/api'
+import { api } from '@/utils/api'
 import { appRouter } from '@/server/api/root'
 import { createTRPCContext } from '@/server/api/trpc'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
-import { z } from 'zod'
-import { Priority } from '@prisma/client'
-
-type TodoInputs = RouterInputs['todos']['create']
-
-//NOTE: Best idea here is to put all my definiton schemas into other file and use them
-// in both server-side and client-side validations
-const todoSchema = z.object<TodoInputs>({
-  title: z.string().min(10),
-  description: z.string().optional(),
-  priority: z.nativeEnum(Priority).optional(),
-  targetDate: z.date().optional(),
-  categoryId: z.string().optional(),
-  assignedTo: z.array(z.string()).optional()
-})
+import { todoSchema, type Todo } from '@/utils/schemas'
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const helpers = createServerSideHelpers({
@@ -49,17 +35,17 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<TodoInputs>({
+  } = useForm<Todo>({
     resolver: zodResolver(todoSchema)
   })
 
-  const handleSubmitForm: SubmitHandler<TodoInputs> = data => {
+  const handleSubmitForm: SubmitHandler<Todo> = data => {
     console.log('data to be submitted: ', data)
     mutate(data)
   }
 
   useEffect(() => {
-    console.log('Hubo un cambio en los errores: ', errors)
+    console.log('Hubo un cambio en los errores: ', { errors })
   }, [errors])
 
   return (
@@ -71,7 +57,6 @@ export default function Home() {
       </Head>
 
       <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
-        {/* Form */}
         <form
           className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(handleSubmitForm)}
@@ -88,7 +73,12 @@ export default function Home() {
             errorMsg={errors.description?.message}
           />
 
-          <Input label="Target date" type="date" />
+          <Input
+            label="Target date"
+            type="date"
+            {...register('targetDate')}
+            errorMsg={errors.targetDate?.message}
+          />
 
           <Select
             label="Priority"
@@ -97,12 +87,14 @@ export default function Home() {
               value: prio
             }))}
             registerProps={register('priority')}
+            errorMsg={errors.priority?.message}
           />
 
           <Select
             label="Category"
             options={categories?.map(cat => ({ ...cat, value: cat.id }))}
             registerProps={register('categoryId')}
+            errorMsg={errors.categoryId?.message}
           />
 
           <button

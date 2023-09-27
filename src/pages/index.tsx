@@ -10,11 +10,20 @@ import { createTRPCContext } from '@/server/api/trpc'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
 import { todoSchema, type Todo } from '@/utils/schemas'
+import { getServerAuthSession } from '@/server/auth'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const session = await getServerAuthSession(ctx)
+
+  if (!session)
+    return { redirect: { permanent: false, destination: '/signIn' } }
+
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: await createTRPCContext({ req, res } as CreateNextContextOptions) //NOTE: possible error for type assertion.
+    ctx: await createTRPCContext({
+      req: ctx.req,
+      res: ctx.res
+    } as CreateNextContextOptions) //NOTE: possible error for type assertion.
   })
   await helpers.todos.getTodoPriorities.prefetch()
   await helpers.categories.getAllByUserId.prefetch()

@@ -9,7 +9,7 @@ import { appRouter } from '@/server/api/root'
 import { createTRPCContext } from '@/server/api/trpc'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
-import { todoSchema, type Todo } from '@/utils/schemas'
+import { createTodoSchema, type CreateTodo } from '@/utils/schemas'
 import { getServerAuthSession } from '@/server/auth'
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
@@ -43,23 +43,24 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<Todo>({
+  } = useForm<CreateTodo>({
     defaultValues: {
       categoryId: null,
       priority: null,
       targetDate: new Date()
     },
     resolver: async (data, context, options) => {
-      const result = await zodResolver(todoSchema)(data, context, options)
+      const result = await zodResolver(createTodoSchema)(data, context, options)
       console.log('Form data: ', data)
       console.log('Validation result: ', result)
       return result
     }
   })
 
-  const handleSubmitForm: SubmitHandler<Todo> = data => {
+  const handleSubmitForm: SubmitHandler<CreateTodo> = data => {
     console.log('data to be submitted: ', data)
-    mutate(data)
+    const result = mutate(data)
+    console.log('Resultado de la mutación: ', result)
   }
 
   return (

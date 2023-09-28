@@ -5,14 +5,26 @@ import {
   publicProcedure
 } from '@/server/api/trpc'
 import { Priority } from '@prisma/client'
-import { todoSchema } from '@/utils/schemas'
+import { createTodoSchema } from '@/utils/schemas'
 
 //TODO: Make every procedure a protected one
 export const todosRouter = createTRPCRouter({
-  create: publicProcedure.input(todoSchema).mutation(({ input }) => {
-    console.log(input)
-    return input
-  }),
+  create: protectedProcedure
+    .input(createTodoSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log(input)
+      const todo = await ctx.prisma.todo.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          targetDate: input.targetDate,
+          categoryId: input.categoryId,
+          createdById: ctx.session.user.id
+        }
+      })
+
+      return todo
+    }),
 
   getAll: publicProcedure.query(({ ctx }) => {
     const todos = ctx.prisma.todo.findMany()

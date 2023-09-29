@@ -99,5 +99,5 @@ model Category {
   createdById String
   // Relationships
   user        User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  Todo        Todo[]
+  todos       Todo[]
 }

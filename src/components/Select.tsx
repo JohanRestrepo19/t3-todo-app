@@ -29,6 +29,7 @@ export default function Select<T>({
         className="block w-full rounded-md border border-gray-300 bg-transparent py-2 text-sm capitalize text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-transparent dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
         {...registerProps}
         defaultValue=""
+        disabled={options?.length === 0}
       >
         <option value="" disabled>
           Select {label}

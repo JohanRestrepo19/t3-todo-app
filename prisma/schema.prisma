@@ -75,8 +75,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-//TODO: Check relationships because it's not working 
-//the Category Relationship
 model Todo {
   id          String    @id @default(cuid())
   title       String

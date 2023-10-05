@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     ctx: await createTRPCContext({
       req: ctx.req,
       res: ctx.res
-    } as CreateNextContextOptions) //NOTE: possible error for type assertion.
+    } as CreateNextContextOptions)
   })
   await helpers.todos.getTodoPriorities.prefetch()
   await helpers.categories.getAllByUserId.prefetch()
@@ -81,11 +81,13 @@ export default function Home() {
             label="Title"
             {...register('title')}
             errorMsg={errors.title?.message}
+            autoComplete='off'
           />
           <Input
             label="Description"
             {...register('description')}
             errorMsg={errors.description?.message}
+            autoComplete='off'
           />
 
           <Input
@@ -93,6 +95,7 @@ export default function Home() {
             type="date"
             {...register('targetDate')}
             errorMsg={errors.targetDate?.message}
+            autoComplete='off'
           />
 
           <Select
@@ -122,7 +125,9 @@ export default function Home() {
         </form>
 
         {/* Todo list */}
-        <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"></div>
+        <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
+          <h3 className="mb-2 text-xl font-medium">Todo list</h3>
+        </div>
       </main>
     </>
   )

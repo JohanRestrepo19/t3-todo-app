@@ -1,8 +1,5 @@
 import { z } from 'zod'
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from '@/server/api/trpc'
+import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc'
 import { Priority } from '@prisma/client'
 import { createTodoSchema } from '@/utils/schemas'
 
@@ -24,15 +21,31 @@ export const todosRouter = createTRPCRouter({
       return todo
     }),
 
-  getAll: protectedProcedure.query(({ ctx }) => {
-    const todos = ctx.prisma.todo.findMany()
-    return todos
+  getAllByUserId: protectedProcedure.query(async ({ ctx }) => {
+    const todos = await ctx.prisma.todo.findMany({
+      where: { createdById: ctx.session.user.id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        priority: true,
+        targetDate: true,
+        status: true,
+        categoryId: true
+      }
+    })
+    return todos.map(todo => ({
+      ...todo,
+      targetDate: todo.targetDate?.toJSON()
+    }))
   }),
 
-  getById: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    const todo = await ctx.prisma.todo.findFirst({ where: { id: input } })
-    return todo
-  }),
+  getById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const todo = await ctx.prisma.todo.findFirst({ where: { id: input } })
+      return todo
+    }),
 
   getTodoPriorities: protectedProcedure.query(() => {
     return Object.values(Priority)

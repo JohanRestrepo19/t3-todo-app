@@ -25,8 +25,11 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
       res: ctx.res
     } as CreateNextContextOptions)
   })
+
   await helpers.todos.getTodoPriorities.prefetch()
   await helpers.categories.getAllByUserId.prefetch()
+  await helpers.todos.getAllByUserId.prefetch()
+
   return {
     props: {
       trpcState: helpers.dehydrate()
@@ -35,8 +38,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 }
 
 export default function Home() {
-  const { mutate, isLoading: isPosting } = api.todos.create.useMutation()
+  const utils = api.useContext()
+  const { mutate, isLoading: isPosting } = api.todos.create.useMutation({
+    onSuccess: async () => await utils.todos.invalidate()
+  })
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
+  const { data: todos } = api.todos.getAllByUserId.useQuery()
   const { data: categories } = api.categories.getAllByUserId.useQuery()
 
   const {
@@ -47,7 +54,7 @@ export default function Home() {
     defaultValues: {
       categoryId: null,
       priority: null,
-      targetDate: new Date()
+      targetDate: null
     },
     resolver: async (data, context, options) => {
       const result = await zodResolver(createTodoSchema)(data, context, options)
@@ -81,13 +88,13 @@ export default function Home() {
             label="Title"
             {...register('title')}
             errorMsg={errors.title?.message}
-            autoComplete='off'
+            autoComplete="off"
           />
           <Input
             label="Description"
             {...register('description')}
             errorMsg={errors.description?.message}
-            autoComplete='off'
+            autoComplete="off"
           />
 
           <Input
@@ -95,7 +102,7 @@ export default function Home() {
             type="date"
             {...register('targetDate')}
             errorMsg={errors.targetDate?.message}
-            autoComplete='off'
+            autoComplete="off"
           />
 
           <Select
@@ -110,7 +117,10 @@ export default function Home() {
 
           <Select
             label="Category"
-            options={categories?.map(cat => ({ ...cat, value: cat.id }))}
+            options={categories?.map(cat => ({
+              ...cat,
+              value: cat.id
+            }))}
             registerProps={register('categoryId')}
             errorMsg={errors.categoryId?.message}
           />

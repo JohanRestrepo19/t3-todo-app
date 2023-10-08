@@ -5,7 +5,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   errorMsg?: string
 }
 
-export default forwardRef<HTMLInputElement, Props>(function Input(
+export const Input = forwardRef<HTMLInputElement, Props>(function Input(
   { label, errorMsg, ...props },
   ref
 ) {

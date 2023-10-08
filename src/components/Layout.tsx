@@ -1,5 +1,5 @@
 import { useEffect, type ReactElement } from 'react'
-import Sidebar from './Sidebar'
+import Sidebar from './sidebar'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 

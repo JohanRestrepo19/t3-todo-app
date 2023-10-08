@@ -12,7 +12,7 @@ interface Props<T> extends SelectHTMLAttributes<HTMLSelectElement> {
   registerProps: UseFormRegisterReturn
 }
 
-export default function Select<T>({
+export function Select<T>({
   label,
   options,
   errorMsg,

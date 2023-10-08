@@ -40,11 +40,13 @@ export default function Sidebar() {
         {session.status === 'authenticated' && (
           <ul className="space-y-2 font-medium">
             <SidebarNavItem label="Home" path="/" icon={faHome} />
-            <SidebarNavItem
-              label="All todos"
-              path="/todos"
-              icon={faRectangleList}
-            />
+
+            {/* <SidebarNavItem */}
+            {/*   label="All todos" */}
+            {/*   path="/todos" */}
+            {/*   icon={faRectangleList} */}
+            {/* /> */}
+
             <SidebarNavItem
               label="Categories"
               path="/categories"

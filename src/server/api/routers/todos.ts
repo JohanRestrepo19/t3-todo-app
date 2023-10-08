@@ -7,7 +7,6 @@ export const todosRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createTodoSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(input)
       const todo = await ctx.prisma.todo.create({
         data: {
           title: input.title,
@@ -34,6 +33,7 @@ export const todosRouter = createTRPCRouter({
         categoryId: true
       }
     })
+
     return todos.map(todo => ({
       ...todo,
       targetDate: todo.targetDate?.toJSON()
@@ -45,6 +45,17 @@ export const todosRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const todo = await ctx.prisma.todo.findFirst({ where: { id: input } })
       return todo
+    }),
+
+  delete: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      //NOTE: Se debería validar que efectivamente exista el id que se va a borrar.
+      const deletedTodo = await ctx.prisma.todo.delete({
+        where: { id: input }
+      })
+
+      return deletedTodo
     }),
 
   getTodoPriorities: protectedProcedure.query(() => {

@@ -1,7 +1,68 @@
+import { Input } from '@/components/form'
+import { api } from '@/utils/api'
+import { createCategorySchema, type CreateCategory } from '@/utils/schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
+
 export default function Categories() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CreateCategory>({
+    resolver: async (data, context, options) => {
+      const result = await zodResolver(createCategorySchema)(
+        data,
+        context,
+        options
+      )
+      console.log('Form data: ', data)
+      console.log('Validation result: ', result)
+      return result
+    }
+  })
+
+  const utils = api.useContext()
+  const { mutate, isLoading: isPosting } = api.categories.create.useMutation({
+    onSuccess: async () => await utils.categories.invalidate(),
+    onError: error => toast.error(error.message)
+  })
+  const { data: categories } = api.categories.getAllByUserId.useQuery()
+
   return (
-    <div>
-      <h1>Categories page</h1>
-    </div>
+    <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
+      <form
+        className="scrollbar flex flex-col items-center max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
+        onSubmit={handleSubmit(data => {
+          console.log('hola mundo: ', data)
+          mutate(data)
+        })}
+      >
+        <h3 className="mb-4 text-xl font-medium">Categories</h3>
+        <Input
+          autoComplete="off"
+          label="Category name"
+          {...register('name')}
+          errorMsg={errors.name?.message}
+        />
+
+        <button
+          type="submit"
+          className="text center dark:hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"
+          disabled={isPosting}
+        >
+          Submit
+        </button>
+
+        <ul className="space-y-2 mt-2">
+          {categories && categories.length > 0
+            ? categories.map(category => (
+              <li key={category.id}>{category.name}</li>
+            ))
+            : 'There is no anything'}
+        </ul>
+      </form>
+    </main>
   )
 }

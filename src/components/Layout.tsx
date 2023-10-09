@@ -1,12 +1,13 @@
-import { useEffect, type ReactElement } from 'react'
-import Sidebar from './sidebar'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { useEffect, type ReactElement } from 'react'
+import { Toaster } from 'react-hot-toast'
+import colors from 'tailwindcss/colors'
+import Sidebar from './sidebar'
 
-type Props = {
+interface Props {
   children: ReactElement
 }
-
 export default function Layout({ children }: Props) {
   const session = useSession()
   const router = useRouter()
@@ -27,6 +28,12 @@ export default function Layout({ children }: Props) {
     <main className="flex max-h-screen bg-base transition-colors delay-100 ease-linear dark:bg-base-dark dark:text-slate-400">
       <Sidebar />
       <div className="grow">{children}</div>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          error: { style: { background: colors.red[200] }, duration: 8000 }
+        }}
+      />
     </main>
   )
 }

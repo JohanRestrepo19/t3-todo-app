@@ -10,7 +10,7 @@ import { createServerSideHelpers } from '@trpc/react-query/server'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
 import { type GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
   const session = await getServerAuthSession(ctx)
@@ -38,14 +38,6 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 }
 
 export default function Home() {
-  const utils = api.useContext()
-  const { mutate, isLoading: isPosting } = api.todos.create.useMutation({
-    onSuccess: async () => await utils.todos.invalidate()
-  })
-  const { data: priorities } = api.todos.getTodoPriorities.useQuery()
-  const { data: todos } = api.todos.getAllByUserId.useQuery()
-  const { data: categories } = api.categories.getAllByUserId.useQuery()
-
   const {
     register,
     handleSubmit,
@@ -56,15 +48,16 @@ export default function Home() {
       priority: null,
       targetDate: null
     },
-    resolver: async (data, context, options) => {
-      const result = await zodResolver(createTodoSchema)(data, context, options)
-      console.log('Form data: ', data)
-      console.log('Validation result: ', result)
-      return result
-    }
+    resolver: zodResolver(createTodoSchema)
   })
 
-  const handleSubmitForm: SubmitHandler<CreateTodo> = data => mutate(data)
+  const utils = api.useContext()
+  const { mutate, isLoading: isPosting } = api.todos.create.useMutation({
+    onSuccess: async () => await utils.todos.invalidate()
+  })
+  const { data: priorities } = api.todos.getTodoPriorities.useQuery()
+  const { data: todos } = api.todos.getAllByUserId.useQuery()
+  const { data: categories } = api.categories.getAllByUserId.useQuery()
 
   return (
     <>
@@ -77,7 +70,7 @@ export default function Home() {
       <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
         <form
           className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
-          onSubmit={handleSubmit(handleSubmitForm)}
+          onSubmit={handleSubmit(data => mutate(data))}
         >
           <h3 className="mb-2 text-xl font-medium">New Todo</h3>
           <Input
@@ -123,7 +116,7 @@ export default function Home() {
 
           <button
             type="submit"
-            className="text center dark.hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"
+            className="text center dark:hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"
             disabled={isPosting}
           >
             Submit

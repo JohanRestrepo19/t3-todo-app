@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { api, type RouterOutputs } from '@/utils/api'
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
 
 type Unpacked<T> = T extends (infer U)[] ? U : T
 interface Props {
@@ -11,16 +11,16 @@ interface Props {
 export const AccordionTodo = ({ todo }: Props) => {
   const utils = api.useContext()
   const [isCollapsed, setIsCollapsed] = useState(true)
-  const { mutate, isLoading: isDeleting } = api.todos.delete.useMutation({
+  const { mutate, isLoading: isDeleting } = api.todos.deleteById.useMutation({
     onSuccess: async () => await utils.todos.invalidate()
   })
 
   return (
     <div className="w-full items-center justify-between rounded-lg border border-gray-200 p-5 text-left font-medium text-gray-500 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:focus:ring-gray-800">
       <header className="flex justify-between ">
-        <p className="capitalize underline underline-offset-2">{todo.title}</p>
+        <p className="capitalize underline underline-offset-2">{todo.title}: {todo.status.toLowerCase()}</p>
         <div className="space-x-2">
-          <span className="capitalize">{todo.status.toLowerCase()}</span>
+          <span className="capitalize">{todo.category?.name}</span>
           <FontAwesomeIcon
             icon={faAngleDown}
             className="inline h-5 w-5 flex-shrink-0 cursor-pointer text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"

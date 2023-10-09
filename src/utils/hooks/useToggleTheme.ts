@@ -25,6 +25,7 @@ export const useToggleTheme = () => {
   }
 
   return {
-    handleToggleTheme
+    handleToggleTheme,
+    currentTheme
   }
 }

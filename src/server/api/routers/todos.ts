@@ -30,7 +30,8 @@ export const todosRouter = createTRPCRouter({
         priority: true,
         targetDate: true,
         status: true,
-        categoryId: true
+        categoryId: true,
+        category: true
       }
     })
 
@@ -47,7 +48,7 @@ export const todosRouter = createTRPCRouter({
       return todo
     }),
 
-  delete: protectedProcedure
+  deleteById: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
       //NOTE: Se debería validar que efectivamente exista el id que se va a borrar.

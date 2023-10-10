@@ -1,5 +1,6 @@
 import { createCategorySchema } from '@/utils/schemas'
 import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
 export const categoriesRouter = createTRPCRouter({
@@ -24,4 +25,12 @@ export const categoriesRouter = createTRPCRouter({
       where: { createdById: ctx.session.user.id }
     })
   }),
+  deleteById: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      const deletedCategory = await ctx.prisma.category.delete({
+        where: { id: input }
+      })
+      return deletedCategory
+    })
 })

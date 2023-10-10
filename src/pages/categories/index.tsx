@@ -1,6 +1,8 @@
 import { Input } from '@/components/form'
-import { api } from '@/utils/api'
+import { api, type RouterOutputs } from '@/utils/api'
 import { createCategorySchema, type CreateCategory } from '@/utils/schemas'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -55,14 +57,46 @@ export default function Categories() {
           Submit
         </button>
 
-        <ul className="space-y-2 mt-2">
+        <ul className="space-y-2 mt-2 w-full bg-green-200">
           {categories && categories.length > 0
             ? categories.map(category => (
-              <li key={category.id}>{category.name}</li>
-            ))
+                <CategoryItem key={category.id} category={category} />
+              ))
             : 'There is no anything'}
         </ul>
       </form>
     </main>
+  )
+}
+
+type Unpacked<T> = T extends (infer U)[] ? U : T
+interface Props {
+  category: Unpacked<RouterOutputs['categories']['getAllByUserId']>
+}
+const CategoryItem = ({ category }: Props) => {
+  const utils = api.useContext()
+  const { mutate, isLoading: isDeleting } =
+    api.categories.deleteById.useMutation({
+      onSuccess: async () => await utils.categories.invalidate()
+    })
+
+  return (
+    <li
+      className="flex justify-between w-auto items-center rounded-lg border border-gray-200 p-2 text-left font-medium text-gray-500 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:focus:ring-gray-800"
+      key={category.id}
+    >
+      <p className="text-left">{category.name}</p>
+      <button
+        type="button"
+        disabled={isDeleting}
+        className="rounded-lg border border-red-700 px-2.5 py-2.5 text-center text-sm font-medium text-red-700 hover:bg-red-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-red-900"
+        onClick={() => mutate(category.id)}
+      >
+        <FontAwesomeIcon
+          icon={faXmark}
+          className="h-3 w-3 flex-shrink-0 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+        />
+      </button>
+    </li>
   )
 }

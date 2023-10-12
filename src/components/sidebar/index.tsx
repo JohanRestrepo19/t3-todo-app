@@ -1,16 +1,15 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useToggleTheme } from '@/utils/hooks/useToggleTheme'
 import {
   faHome,
-  faRectangleList,
   faRightFromBracket,
   faRightToBracket,
   faSun,
   faTags
 } from '@fortawesome/free-solid-svg-icons'
-import { SidebarNavItem, SidebarActionItem } from './NavItem'
-import { useToggleTheme } from '@/utils/hooks/useToggleTheme'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { SidebarActionItem, SidebarNavItem } from './NavItem'
 
 export default function Sidebar() {
   const { data, ...session } = useSession()
@@ -40,12 +39,6 @@ export default function Sidebar() {
         {session.status === 'authenticated' && (
           <ul className="space-y-2 font-medium">
             <SidebarNavItem label="Home" path="/" icon={faHome} />
-
-            {/* <SidebarNavItem */}
-            {/*   label="All todos" */}
-            {/*   path="/todos" */}
-            {/*   icon={faRectangleList} */}
-            {/* /> */}
 
             <SidebarNavItem
               label="Categories"

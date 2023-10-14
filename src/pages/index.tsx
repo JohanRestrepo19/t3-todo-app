@@ -41,6 +41,7 @@ export default function Home() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<CreateTodo>({
     defaultValues: {
@@ -53,7 +54,10 @@ export default function Home() {
 
   const utils = api.useContext()
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation({
-    onSuccess: async () => await utils.todos.invalidate()
+    onSuccess: async () => {
+      await utils.todos.invalidate()
+      reset()
+    }
   })
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
   const { data: todos } = api.todos.getAllByUserId.useQuery()
@@ -67,7 +71,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-wrap justify-center items-start gap-x-4 h-full pt-8">
+      <main className="flex flex-col gap-y-4 justify-center items-center lg:flex-row lg:items-start lg:gap-x-8 lg:pt-8">
         <form
           className="scrollbar max-h-[496px] w-96 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(data => mutate(data))}
@@ -116,7 +120,7 @@ export default function Home() {
 
           <button
             type="submit"
-            className="text center dark:hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800 sm:w-auto"
+            className="text-center dark:hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800"
             disabled={isPosting}
           >
             Submit
@@ -124,7 +128,7 @@ export default function Home() {
         </form>
 
         {/* Todo list */}
-        <div className="scrollbar max-h-screen w-96 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
+        <div className="scrollbar max-h-[496px] w-96 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
           <h3 className="mb-2 text-xl font-medium">Todo list</h3>
           <ul className="space-y-2">
             {todos && todos.length > 0 ? (

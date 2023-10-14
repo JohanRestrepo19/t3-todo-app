@@ -10,6 +10,7 @@ export default function Categories() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<CreateCategory>({
     resolver: async (data, context, options) => {
@@ -26,7 +27,10 @@ export default function Categories() {
 
   const utils = api.useContext()
   const { mutate, isLoading: isPosting } = api.categories.create.useMutation({
-    onSuccess: async () => await utils.categories.invalidate(),
+    onSuccess: async () => {
+      await utils.categories.invalidate()
+      reset()
+    },
     onError: error => toast.error(error.message)
   })
   const { data: categories } = api.categories.getAllByUserId.useQuery()

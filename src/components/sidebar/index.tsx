@@ -19,7 +19,7 @@ export default function Sidebar() {
   const handleLogout = async () => await signOut()
 
   return (
-    <aside className="min-h-screen w-48 -translate-x-full transition-transform sm:translate-x-0">
+    <aside className="min-h-screen w-48">
       <div className="h-full overflow-y-auto bg-gray-50 px-3 py-4 transition-colors delay-100 ease-linear dark:bg-gray-800">
         <Link href="/" className="mb-5 flex items-center pl-2.5">
           <Image

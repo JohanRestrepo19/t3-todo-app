@@ -1,2 +1,2 @@
-export * from './todoSchema'
 export * from './categorySchema'
+export * from './todoSchema'

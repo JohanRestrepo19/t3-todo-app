@@ -1,7 +1,7 @@
-import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc'
-import { Priority } from '@prisma/client'
 import { createTodoSchema } from '@/utils/schemas'
+import { Priority } from '@prisma/client'
+import { z } from 'zod'
 
 export const todosRouter = createTRPCRouter({
   create: protectedProcedure

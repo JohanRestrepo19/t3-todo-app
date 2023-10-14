@@ -1,7 +1,7 @@
-import { type LiHTMLAttributes } from 'react'
-import Link from 'next/link'
 import { type IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
+import { type LiHTMLAttributes } from 'react'
 
 interface Props extends LiHTMLAttributes<HTMLLIElement> {
   label: string

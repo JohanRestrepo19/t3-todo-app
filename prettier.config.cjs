@@ -8,7 +8,7 @@ const config = {
   bracketSpacing: true,
   plugins: [
     require.resolve('prettier-plugin-tailwindcss'),
-    'prettier-plugin-organize-imports'
+    require.resolve('prettier-plugin-organize-imports')
   ]
 }
 

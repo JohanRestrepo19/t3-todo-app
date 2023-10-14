@@ -1,5 +1,5 @@
 import { Input, Select } from '@/components/form'
-import { AccordionTodo } from '@/components/todo'
+import { TodoItem } from '@/components/todo'
 import { appRouter } from '@/server/api/root'
 import { createTRPCContext } from '@/server/api/trpc'
 import { getServerAuthSession } from '@/server/auth'
@@ -67,9 +67,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
+      <main className="flex flex-wrap justify-center items-start gap-x-4 h-full pt-8">
         <form
-          className="scrollbar block max-h-full basis-5/12 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
+          className="scrollbar max-h-[496px] w-96 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(data => mutate(data))}
         >
           <h3 className="mb-2 text-xl font-medium">New Todo</h3>
@@ -124,12 +124,14 @@ export default function Home() {
         </form>
 
         {/* Todo list */}
-        <div className="scrollbar block max-h-full basis-5/12 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
+        <div className="scrollbar max-h-screen w-96 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
           <h3 className="mb-2 text-xl font-medium">Todo list</h3>
           <ul className="space-y-2">
-            {todos && todos.length > 0
-              ? todos.map(todo => <AccordionTodo key={todo.id} todo={todo} />)
-              : "There's nothing to do"}
+            {todos && todos.length > 0 ? (
+              todos.map(todo => <TodoItem key={todo.id} todo={todo} />)
+            ) : (
+              <p>There&apos;s nothing to do</p>
+            )}
           </ul>
         </div>
       </main>

@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { Priority } from '@prisma/client'
+import { z } from 'zod'
 
 export const createTodoSchema = z.object({
   title: z

@@ -6,10 +6,7 @@ const config = {
   arrowParens: 'avoid',
   semi: false,
   bracketSpacing: true,
-  plugins: [
-    require.resolve('prettier-plugin-tailwindcss'),
-    require.resolve('prettier-plugin-organize-imports')
-  ]
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss']
 }
 
 module.exports = config

@@ -71,7 +71,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col gap-y-4 justify-center items-center lg:flex-row lg:items-start lg:gap-x-8 lg:pt-8">
+      <main className="flex flex-col items-center justify-center gap-y-4 lg:flex-row lg:items-start lg:gap-x-8 lg:pt-8">
         <form
           className="scrollbar max-h-[496px] w-96 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(data => mutate(data))}
@@ -120,7 +120,7 @@ export default function Home() {
 
           <button
             type="submit"
-            className="text-center dark:hover:bg-blue-700 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:focus:ring-blue-800"
+            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             disabled={isPosting}
           >
             Submit

@@ -16,7 +16,7 @@ export const CategoryItem = ({ category }: Props) => {
 
   return (
     <li
-      className="flex justify-between w-auto items-center rounded-lg border border-gray-200 p-2 text-left font-medium hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800"
+      className="flex w-auto items-center justify-between rounded-lg border border-gray-200 p-2 text-left font-medium hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800"
       key={category.id}
     >
       <p className="text-left">{category.name}</p>

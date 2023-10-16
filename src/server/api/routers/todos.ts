@@ -32,7 +32,8 @@ export const todosRouter = createTRPCRouter({
         status: true,
         categoryId: true,
         category: true
-      }
+      },
+      orderBy: { status: 'asc' }
     })
 
     return todos.map(todo => ({
@@ -42,7 +43,7 @@ export const todosRouter = createTRPCRouter({
   }),
 
   getById: protectedProcedure
-    .input(z.string())
+    .input(z.string().cuid())
     .query(async ({ ctx, input }) => {
       const todo = await ctx.prisma.todo.findFirst({ where: { id: input } })
       return todo
@@ -51,7 +52,6 @@ export const todosRouter = createTRPCRouter({
   deleteById: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
-      //NOTE: Se debería validar que efectivamente exista el id que se va a borrar.
       const deletedTodo = await ctx.prisma.todo.delete({
         where: { id: input }
       })
@@ -59,6 +59,24 @@ export const todosRouter = createTRPCRouter({
       return deletedTodo
     }),
 
+  markAsDoneById: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      const updatedTodo = await ctx.prisma.todo.update({
+        where: { id: input },
+        data: { status: 'DONE', updatedAt: new Date() }
+      })
+      return updatedTodo
+    }),
+  markAsPendingById: protectedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input }) => {
+      const updatedTodo = await ctx.prisma.todo.update({
+        where: { id: input },
+        data: { status: 'PENDING', updatedAt: new Date() }
+      })
+      return updatedTodo
+    }),
   getTodoPriorities: protectedProcedure.query(() => {
     return Object.values(Priority)
   })

@@ -55,7 +55,7 @@ export default function Home() {
   const utils = api.useContext()
   const { mutate, isLoading: isPosting } = api.todos.create.useMutation({
     onSuccess: async () => {
-      await utils.todos.invalidate()
+      await utils.todos.getAllByUserId.invalidate()
       reset()
     }
   })

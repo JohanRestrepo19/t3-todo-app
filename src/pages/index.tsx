@@ -9,34 +9,9 @@ import { createTodoSchema, type CreateTodo } from '@/utils/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
-import { type GetServerSideProps } from 'next'
+import { type GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import { useForm } from 'react-hook-form'
-
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const session = await getServerAuthSession(ctx)
-
-  if (!session)
-    return { redirect: { permanent: false, destination: '/signIn' } }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: await createTRPCContext({
-      req: ctx.req,
-      res: ctx.res
-    } as CreateNextContextOptions)
-  })
-
-  await helpers.todos.getTodoPriorities.prefetch()
-  await helpers.categories.getAllByUserId.prefetch()
-  await helpers.todos.getAllByUserId.prefetch()
-
-  return {
-    props: {
-      trpcState: helpers.dehydrate()
-    }
-  }
-}
 
 export default function Home() {
   const {
@@ -73,7 +48,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center gap-y-4 pt-8 lg:flex-row lg:items-start lg:gap-x-8">
+      <main className="flex h-full flex-col items-center justify-center gap-y-4 pt-8 lg:flex-row lg:items-start lg:gap-x-8">
         <form
           className="scrollbar max-h-[496px] w-96 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(data => mutate(data))}
@@ -147,4 +122,29 @@ export default function Home() {
       </main>
     </>
   )
+}
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerAuthSession(ctx)
+
+  if (!session)
+    return { redirect: { permanent: false, destination: '/signIn' } }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: await createTRPCContext({
+      req: ctx.req,
+      res: ctx.res
+    } as CreateNextContextOptions)
+  })
+
+  await helpers.todos.getTodoPriorities.prefetch()
+  await helpers.categories.getAllByUserId.prefetch()
+  await helpers.todos.getAllByUserId.prefetch()
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate()
+    }
+  }
 }

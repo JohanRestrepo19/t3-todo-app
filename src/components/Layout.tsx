@@ -15,7 +15,7 @@ export default function Layout({ children }: Props) {
   useEffect(() => {
     if (session.status === 'unauthenticated') {
       //eslint-disable-next-line
-      router.push('/signIn')
+      router.push('/auth/signIn')
     }
     //eslint-disable-next-line
   }, [session])

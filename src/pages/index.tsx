@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Input, Select } from '@/components/form'
 import { TodoItem } from '@/components/todo'
 import { appRouter } from '@/server/api/root'
@@ -60,7 +61,8 @@ export default function Home() {
     }
   })
   const { data: priorities } = api.todos.getTodoPriorities.useQuery()
-  const { data: todos } = api.todos.getAllByUserId.useQuery()
+  const { data: todos, isLoading: isLoadingTodos } =
+    api.todos.getAllByUserId.useQuery()
   const { data: categories } = api.categories.getAllByUserId.useQuery()
 
   return (
@@ -71,7 +73,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center gap-y-4 lg:flex-row lg:items-start lg:gap-x-8 lg:pt-8">
+      <main className="flex flex-col items-center justify-center gap-y-4 pt-8 lg:flex-row lg:items-start lg:gap-x-8">
         <form
           className="scrollbar max-h-[496px] w-96 overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
           onSubmit={handleSubmit(data => mutate(data))}
@@ -130,13 +132,17 @@ export default function Home() {
         {/* Todo list */}
         <div className="scrollbar max-h-[496px] w-96 overflow-hidden overflow-y-auto rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
           <h3 className="mb-2 text-xl font-medium">Todo list</h3>
-          <ul className="space-y-2">
-            {todos && todos.length > 0 ? (
-              todos.map(todo => <TodoItem key={todo.id} todo={todo} />)
-            ) : (
-              <p>There&apos;s nothing to do</p>
-            )}
-          </ul>
+          {isLoadingTodos ? (
+            <LoadingSpinner />
+          ) : todos?.length === 0 ? (
+            <p>There&apos;s nothing to do</p>
+          ) : (
+            <ul className="space-y-2">
+              {todos?.map(todo => (
+                <TodoItem key={todo.id} todo={todo} />
+              ))}
+            </ul>
+          )}
         </div>
       </main>
     </>

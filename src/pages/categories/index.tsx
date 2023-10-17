@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { CategoryItem } from '@/components/category'
 import { Input } from '@/components/form'
 import { api } from '@/utils/api'
@@ -13,18 +14,8 @@ export default function Categories() {
     reset,
     formState: { errors }
   } = useForm<CreateCategory>({
-    resolver: async (data, context, options) => {
-      const result = await zodResolver(createCategorySchema)(
-        data,
-        context,
-        options
-      )
-      console.log('Form data: ', data)
-      console.log('Validation result: ', result)
-      return result
-    }
+    resolver: zodResolver(createCategorySchema)
   })
-
   const utils = api.useContext()
   const { mutate, isLoading: isPosting } = api.categories.create.useMutation({
     onSuccess: async () => {
@@ -33,7 +24,7 @@ export default function Categories() {
     },
     onError: error => toast.error(error.message)
   })
-  const { data: categories } = api.categories.getAllByUserId.useQuery()
+  const categoriesQuery = api.categories.getAllByUserId.useQuery()
 
   return (
     <main className="flex h-full flex-col items-center gap-8 p-16 sm:flex-row sm:flex-wrap sm:items-start sm:justify-evenly">
@@ -61,14 +52,16 @@ export default function Categories() {
         </button>
 
         <ul className="mt-2 w-full space-y-2 text-gray-500 dark:text-gray-400">
-          {categories && categories.length > 0 ? (
-            categories.map(category => (
-              <CategoryItem key={category.id} category={category} />
-            ))
-          ) : (
+          {categoriesQuery.isLoading ? (
+            <LoadingSpinner />
+          ) : categoriesQuery.data?.length === 0 ? (
             <p className="text-center">
               You don&apos;t have any category yet...
             </p>
+          ) : (
+            categoriesQuery.data?.map(category => (
+              <CategoryItem key={category.id} category={category} />
+            ))
           )}
         </ul>
       </form>

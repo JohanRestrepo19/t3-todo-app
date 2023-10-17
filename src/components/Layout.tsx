@@ -17,10 +17,6 @@ export default function Layout({ children }: Props) {
       //eslint-disable-next-line
       router.push('/signIn')
     }
-    if (session.status === 'authenticated') {
-      //eslint-disable-next-line
-      router.push('/')
-    }
     //eslint-disable-next-line
   }, [session])
 
